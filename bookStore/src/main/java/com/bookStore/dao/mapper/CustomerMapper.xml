@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace是对应的mapper接口文件 -->
+<mapper namespace="com.bookStore.dao.CustomerMapper">
+	<insert id="insertCustomer"
+		parameterType="com.bookStore.dao.model.Customer">
+		insert into
+		customer(cusNo,cusName,cusPassword,cusAddr,cusPhone,cusType)
+		values(#{cusNo},
+		#{cusName},#{cusPassword},#{cusAddr},#{cusPhone},#{cusType})
+	</insert>
+
+	<select id="selectAllCustomer"
+		resultType="com.bookStore.dao.model.Customer">
+		select * from customer
+	</select>
+
+	<select id="selectLoginUserName"
+		resultType="com.bookStore.dao.model.Customer">
+		select * from customer where 1=1 and cusNo=#{name} or cusName=#{name}
+	</select>
+	
+	<!-- 通过id查询信息 -->
+		<select id="cusgetIdInfo"
+		resultType="com.bookStore.dao.model.Customer">
+		select * from customer where 1=1 and cusId=#{cusId}
+	  </select>
+	
+	
+	
+	<delete id="delCustomer">
+		delete from customer where cusId=#{cusId}
+	</delete>
+
+	<update id="updateCustomer"
+		parameterType="com.bookStore.dao.model.Customer">
+		update customer set
+		cusNo=#{cusNo},cusName=#{cusName},cusPassword=#{cusPassword},
+		cusAddr=#{cusAddr},cusPhone=#{cusPhone},cusType=#{cusType}
+		where cusId=#{cusId}
+	</update>
+	
+	<update id="minusBookNum">
+		update customer set
+		cusNo=#{cusNo},cusName=#{cusName},cusPassword=#{cusPassword},
+		cusAddr=#{cusAddr},cusPhone=#{cusPhone},cusType=#{cusType}
+		where cusId=#{cusId}
+	</update>
+
+
+
+
+</mapper>

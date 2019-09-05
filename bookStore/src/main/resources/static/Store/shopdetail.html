@@ -1,0 +1,571 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>详情页面</title>
+
+
+
+<link href="style/shopdetail.css" rel="stylesheet" type="text/css">
+
+<script src="js/jquery-1.9.1.min.js"></script>
+
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/animate.css">
+<link rel="stylesheet" href="../css/style.css">
+
+
+<!-- Modernizr JS -->
+<script src="../js/modernizr-2.6.2.min.js"></script>
+<!-- jQuery -->
+<script src="../js/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="../js/bootstrap.min.js"></script>
+<!-- Placeholder -->
+<script src="../js/jquery.placeholder.min.js"></script>
+<!-- Waypoints -->
+<script src="../js/jquery.waypoints.min.js"></script>
+<!-- Main JS -->
+<script src="../js/main.js"></script>
+
+
+<script src="js/common.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var showproduct = {
+			"boxid" : "showbox",
+			"sumid" : "showsum",
+			"boxw" : 400,
+			"boxh" : 550,
+			"sumw" : 60,//列表每个宽度,该版本中请把宽高填写成一样
+			"sumh" : 60,//列表每个高度,该版本中请把宽高填写成一样
+			"sumi" : 7,//列表间隔
+			"sums" : 5,//列表显示个数
+			"sumsel" : "sel",
+			"sumborder" : 1,//列表边框，没有边框填写0，边框在css中修改
+			"lastid" : "showlast",
+			"nextid" : "shownext"
+		};//参数定义	  
+		$.ljsGlasses.pcGlasses(showproduct);//方法调用，务必在加载完后执行
+
+		$(function() {
+
+			$('.tabs a').click(function() {
+
+				var $this = $(this);
+				$('.panel').hide();
+				$('.tabs a.active').removeClass('active');
+				$this.addClass('active').blur();
+				var panel = $this.attr("href");
+				$(panel).show();
+				return fasle; //告诉浏览器  不要纸箱这个链接
+			})//end click
+
+			$(".tabs li:first a").click() //web 浏览器，单击第一个标签吧
+
+		})//end ready
+
+		$(".centerbox li").click(function() {
+			$("li").removeClass("now");
+			$(this).addClass("now")
+
+		});
+
+	});
+</script>
+
+<style type="text/css">
+a {
+	text-decoration: none;
+}
+</style>
+
+
+</head>
+
+<body id="body">
+	<!-----header部分------->
+	<div class="header">
+		<div class="top">
+			<div class="top1">
+
+				<a id="storedl" href="welcome.html">登录</a> <a id="zhuche"
+					href="register.html">注册</a> <a id="dlName" href="#">&nbsp;&nbsp;&nbsp;</a>
+				<a href="../ShopCart/gouwuche.html"><img src="images/index_img/top1.jpg">我的购物车</a> <a
+					href="#"><img src="images/index_img/top3.jpg">联系我们</a>
+			</div>
+			<script type="text/javascript">
+				$(function() {
+					//alert("获取Cookie");
+					var gcookie = getCookie("cookieCustomerId");
+					if (gcookie == "") {
+						$('#dlName').css("display", "none");
+					} else {
+						var dlName = getCookieName("cookieCustomername");
+						//alert(dlName);
+						$("#dlName").text("" + dlName + ""); //a标签里添加值
+						$('#storedl').css("display", "none");
+						$('#zhuche').css("display", "none");
+					}
+				});
+				function getCookie(cookieKey) {
+					//alert("-----------");
+					var _cookie = document.cookie.split("; ");
+					var _ckt = "";
+					for (j = 0; j < _cookie.length; j++) {
+						_ckt = _cookie[j].split("=")
+						if (_ckt[0].toLowerCase() == cookieKey.toLowerCase())
+							return _ckt[1];
+					}
+					return "";
+				}
+				function getCookieName(cookieKey) {
+					//alert("获取名字");
+					var _cookie = document.cookie.split("; ");
+					var _ckt = "";
+					for (j = 0; j < _cookie.length; j++) {
+						_ckt = _cookie[j].split("=")
+						if (_ckt[0].toLowerCase() == cookieKey.toLowerCase())
+							return _ckt[1];
+					}
+					return "";
+				}
+			</script>
+
+
+		</div>
+		<!-----logo_search部分------->
+		<div class="logobg">
+			<div class="center">
+				<div class="logo">
+					<img src="images/index_img/logo.gif" width="249" height="55">
+				</div>
+				<form id="searchForm" style="width: 380px">
+					<input type="text" id="searchTxt" style="width: 270px"> <input
+						type="submit" value="搜  索" id="search_btn" style="width: 80px">
+				</form>
+			</div>
+		</div>
+		<!-----主导航部分------->
+
+		<script type="text/javascript">
+			function GetQueryString(name) {//获取url图书ID
+				//alert("bookId="+name);
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+				var reg_rewrite = new RegExp("(^|/)" + name + "/([^/]*)(/|$)",
+						"i");
+				var r = window.location.search.substr(1).match(reg);
+
+				var q = window.location.pathname.substr(1).match(reg_rewrite);
+				//alert("r"+r+"q"+q);
+				if (r != null) {
+					return unescape(r[2]);
+				} else if (q != null) {
+					return unescape(q[2]);
+				} else {
+					return null;
+				}
+			}
+
+			function ajaxgetBookInfo(bookIda) {
+				$.ajax({
+					type : "post",//表单提交类型
+					url : "../book/bookInfo",//验证是否存在url的bookId
+					dataType : 'json',
+					data : {
+						'bookId' : bookIda
+					},
+					success : function(obj) {
+						//	alert(obj.bookName);
+
+						$("[name='price']").text("￥" + obj.bookPrice);
+						$("[name='bookName']").text("" + obj.bookName);
+						$("[name='bookAuthor']").text("" + obj.bookAuthor);
+						$("[name='bookPublish']").text("" + obj.bookPublish);
+						//alert("../book/img/"+obj.bookImg);
+						var a = "../book/img/" + obj.bookImg;
+
+						$("[name='bookImg']").attr("src", a);
+						$("#bookImgc").attr("src", a);
+						$("#body").css("background-color", "#fff");
+					}
+				});
+			}
+
+			$(function() {
+				var bookIda = GetQueryString('bookId');//获取url Id
+				ajaxgetBookInfo(bookIda);
+			});
+		</script>
+		<div class="bottom">
+			<div class="menu" style="top: -29px">
+				<a href="#">全部商品分类</a>
+			</div>
+			<div class="nav" style="top: 1px">
+				<a href="index.html" class="now">首页</a> <a href="tuangou.html">团购促销</a>
+				<a href="mingshihuicui.html">名师荟萃</a> <a href="yipinyizhan.html">艺品驿站</a>
+				<a href="western.html">欧式摆件</a>
+			</div>
+		</div>
+
+
+	</div>
+	<!-----header结束------->
+	<!-----商品详情部分------->
+	<div class="shopdetails">
+		<!-------放大镜-------->
+		<div id="leftbox">
+			<div id="showbox">
+				<!-- src="../book/img/83c6d337-b00a-44df-88a5-f057be9fac65.jpg" -->
+				<img id="bookImg" src="images/shopdetail/img01.png" name="bookImg"
+					width="400" height="550" />
+
+
+			</div>
+			<!--展示图片盒子-->
+			<div id="showsum"></div>
+			<!--展示图片里边-->
+			<p class="showpage">
+				<a href="javascript:void(0);" id="showlast"> < </a> <a
+					href="javascript:void(0);" id="shownext"> > </a>
+			</p>
+
+		</div>
+		<!----中间----->
+
+		<div class="centerbox">
+			<p class="imgname" name="bookName">叠叠杯水杯茶杯套杯陶瓷咖啡牛奶杯具套装</p>
+			<p class="Aprice">
+				出版社：
+				<samp name="bookPublish">￥89.00</samp>
+			</p>
+			<p class="price">
+				促销价：
+				<samp name="price">￥49.00</samp>
+			</p>
+			<p class="youhui">
+				作者：
+				<samp name="bookAuthor">购物满两件打八折</samp>
+			</p>
+			<p class="kefu">客服：</p>
+			<ul>
+				<li class="kuanshi">款式：</li>
+				<li class="now shopimg"><a href="#" title="熊猫套装"><img
+						src="images/shopdetail/kuanshi01.jpg" width="45"></a></li>
+				<li class="shopimg"><a href="#" title="铁塔套装"><img
+						src="images/shopdetail/kuanshi02.jpg" width="45"></a></li>
+				<li class="shopimg"><a href="#" title="创意胡子"><img
+						src="images/shopdetail/kuanshi03.jpg" width="45"></a></li>
+				<li class="shopimg"><a href="#" title="四色小猫"><img
+						src="images/shopdetail/kuanshi04.jpg" width="45"></a></li>
+			</ul>
+			<div class="clear"></div>
+			<p class="chima">尺码：</p>
+			<p class="buy">
+				<a style="cursor: pointer" id="firstbuy" onclick="firstybuy()">立即购买</a>
+				<a style="cursor: pointer" onclick="gouwuche()" id="gouwuche">加入购物车</a>
+			</p>
+			<div class="clear"></div>
+			<div class="fenx">
+				<a href="#"><img src="images/shopdetail/tell07.png"></a>
+			</div>
+			<p class="fuwu" style="background-position-x: 70px;">服务承诺：</p>
+			<p class="pay">支付方式：</p>
+		</div>
+
+		<!-----右边------->
+
+	</div>
+
+	<script type="text/javascript">
+		function firstybuy() {
+			var gcookie = getCookie("cookieCustomerId");
+			// alert(""+gcookie);
+			if (gcookie == null || gcookie == "") {
+
+				$('#zhuce').css("display", "block");
+			} else {
+				var bookIda = GetQueryString('bookId');
+				window.location.href = "../order/order?bookId=" + bookIda;
+			}
+		}//alert();
+		function gouwuche() {
+
+			var bookNamea = $("[name='bookName']").html();
+
+			//  alert("bookName=="+a);
+
+			var gcookie = getCookie("cookieCustomerId");//
+			alert("" + gcookie);
+			var bookIda = GetQueryString('bookId');
+			if (gcookie == null || gcookie == "") {
+				$('#zhuce').css("display", "block");
+			} else { 
+				$.ajax({
+					type : "post",//表单提交类型
+					url : "../shopCart/AddShopcart",//验证是否存在url的bookId
+					dataType : 'json',
+					data : {
+						'bookId' : bookIda,
+						'cusId' : gcookie,
+						'bookName' : bookNamea,
+					},
+					success : function(obj) {
+						alert(" "+obj.result);
+					}
+				});
+			}
+		}
+	 
+	</script>
+
+
+	<!-- 显示注册和登录 -->
+	<!-- 注册 -->
+	<!-- display: none; -->
+	<div id="zhuce" class="container"
+		style="position: fixed; top: 0px; left: 100px; z-index: 9999; display: none;">
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4" style="">
+				<form action="#" class="fh5co-form animate-box" style=""
+					data-animate-effect="fadeIn" id="loginForm" method="post">
+					<h2>登&nbsp;&nbsp;录</h2>
+					<div class="form-group">
+						<label for="username" class="sr-only">用户名</label>
+						<!-- <input class="easyui-textbox" type="text" name="cusNo" data-options="required:true"></input> -->
+						<input type="text" class=" form-control" id="username"
+							placeholder="用户名" autocomplete="off" data-options="required:true">
+
+						<p id="yhmcc" style="color: #ff0000; display: none;">用户名错误</p>
+						<p id="qsryhm" style="color: #ff0000; display: none;">请输入用户名</p>
+					</div>
+					<div class="form-group">
+						<label for="password" class="sr-only">密码</label> <input
+							type="password" class=" form-control" id="password"
+							placeholder="密码" autocomplete="off" data-options="required:true">
+
+						<p id="mmcw" style="color: #ff0000; display: none;">密码错误</p>
+						<p id="qsrmm" style="color: #ff0000; display: none;">请输入密码</p>
+
+					</div>
+
+					<div class="form-group">
+						<!--&nbsp;&nbsp;记住我-->
+						<label for="remember"><input type="checkbox"
+							id="remembera"> &nbsp;记住我</label>
+					</div>
+					<div class="form-group">
+						<!--Not registered?-->
+						<p>
+							<a href="sign-up.html">注 册 </a> | <a href="forgot.html">忘记密码</a>
+						</p>
+					</div>
+					<div class="form-group">
+						<input type="button" value="登 &nbsp;&nbsp; 录"
+							class="btn btn-primary" onclick="submitForma() ">
+					</div>
+				</form>
+				<!-- END Sign In Form -->
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		// 获取cookie
+		$.ajax({
+			type : "get",//表单提交类型
+			url : "../login/getCookie",
+			dataType : 'json',
+			success : function(obj) {
+				//alert(obj)
+				//	$.messager.alert('添加成功', obj.result);
+				//alert("ddddddddddd");
+				var username = obj.username;
+				var password = obj.password;
+				if (username != "") {
+					$("#username").attr("value", username);
+					$("#password").attr("value", password);
+				}
+			}
+		});
+
+		$("#username").bind("click", function() {
+			$('#qsryhm').css("display", "none");
+			$('#yhmcc').css("display", "none");
+		});
+		$("#password").bind("click", function() {
+			$('#mmcw').css("display", "none");
+			$('#qsrmm').css("display", "none");
+		});
+
+		function submitForma() {
+			var fxk = $('#remembera').is(':checked');//判断复选框是否选中			
+			var a = $('#username').val();
+			var p = $('#password').val();
+
+			if (a == null || a == "") {
+				$('#qsryhm').css("display", "block");
+			}
+			if (p == null || p == "") {
+				$('#qsrmm').css("display", "block");
+			}
+
+			if (a != "" && p != "") {
+
+				$
+						.ajax({
+							type : "get",//表单提交类型
+							url : "../login/cusInfo?name=" + a + "&password="
+									+ p + "&fxk=" + fxk,//提交路径地址http://localhost:8080/           
+							dataType : 'json',//后台返回的数据格式
+							//data : $('#loginForm').serialize(),//把表单数据序列化成ajax所需要的格式
+							success : function(obj) {
+								//$.messager.alert('添加提示', obj.result);
+								if (obj.result == "用户名错误") {
+									$('#yhmcc').css("display", "block");
+								} else if (obj.result == "密码错误") {
+									$('#mmcw').css("display", "block");
+								} else {
+									if (obj.result == "VIP客户") {
+										alert("VIP客户 登录成功");//VIP客户 
+										var dlName = getCookieName("cookieCustomername");
+										$('#dlName').css("display", "block");
+										$("#dlName").text("" + dlName + ""); //a标签里添加值
+										$('#storedl').css("display", "none");
+										$('#zhuche').css("display", "none");
+										$('#zhuce').css("display", "none");
+									}
+									if (obj.result == "普通客户") {
+										alert("普通客户");
+										var dlName = getCookieName("cookieCustomername");
+										$('#dlName').css("display", "block");
+										$("#dlName").text("" + dlName + ""); //a标签里添加值
+										$('#storedl').css("display", "none");
+										$('#zhuche').css("display", "none");
+										$('#zhuce').css("display", "none");
+									}
+									if (obj.result == "管理员") {//管理员
+										alert("管理员");
+										var dlName = getCookieName("cookieCustomername");
+										$('#dlName').css("display", "block");
+										$("#dlName").text("" + dlName + ""); //a标签里添加值
+										$('#storedl').css("display", "none");
+										$('#zhuche').css("display", "none");
+										$('#zhuce').css("display", "none");
+									} else {
+										var dlName = getCookieName("cookieCustomername");
+										$('#dlName').css("display", "block");
+										$("#dlName").text("" + dlName + ""); //a标签里添加值
+										$('#storedl').css("display", "none");
+										$('#zhuche').css("display", "none");
+										$('#zhuce').css("display", "none");
+									}
+									//$.messager.alert('添加成功', obj.result);
+								}
+
+								//提交成功后的处理代码 obj就是后台的返回对象
+							}
+						});
+			}
+		}
+	</script>
+
+
+	<!-----商品详情部分结束------->
+	<!-----商品详情评价部分------->
+
+	<!-----商品详情评价部结束分------->
+
+	<!----bottom_页脚部分----->
+	<div class="backf">
+		<div id="footer">
+			<ul>
+				<li class="sy">支付方式</li>
+				<li><a href="#">在线支付</a></li>
+				<li><a href="#">货到付款</a></li>
+				<li><a href="#">发票说明</a></li>
+				<li><a href="#">余额宝</a></li>
+
+			</ul>
+			<ul>
+				<li class="sy">购物指南</li>
+				<li><a href="#">免费注册</a></li>
+				<li><a href="#">申请会员</a></li>
+				<li><a href="#">开通支付宝</a></li>
+				<li><a href="#">支付宝充值</a></li>
+			</ul>
+			<ul>
+				<li class="sy">商家服务</li>
+				<li><a href="#">联系我们</a></li>
+				<li><a href="#">客服服务</a></li>
+				<li><a href="#">物流服务</a></li>
+				<li><a href="#">缺货赔付</a></li>
+			</ul>
+			<ul>
+				<li class="sy">关于我们</li>
+				<li><a href="#">知识产权</a></li>
+				<li><a href="#">网站合作</a></li>
+				<li><a href="#">规则意见</a></li>
+				<li><a href="#">帮助中心</a></li>
+			</ul>
+			<ul>
+				<li class="sy">其他服务</li>
+				<li><a href="#">诚聘英才</a></li>
+				<li><a href="#">法律声明</a></li>
+
+			</ul>
+			<div class="clear"></div>
+		</div>
+		<div class="foot">
+			<p>使用本网站即表示接受 何光耀网上商城用户协议</p>
+			<p>版权所有——————————————————</p>
+
+		</div>
+	</div>
+
+
+	<!--   <div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<form action="#" class="fh5co-form animate-box"
+					data-animate-effect="fadeIn" style="margin-top: 5px; width: 480px;">
+					<h2>注&nbsp;&nbsp;&nbsp;册</h2>
+					<div class="form-group">
+						<label for="name" class="sr-only">用户名</label> <input type="text"
+							class="form-control" id="name" placeholder="用户名"
+							autocomplete="off">
+					</div>
+					<div class="form-group">
+						<label for="password" class="sr-only">密码</label> <input
+							type="password" class="form-control" id="password"
+							placeholder="密码" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<label for="re-password" class="sr-only">验证密码</label> <input
+							type="password" class="form-control" id="re-password"
+							placeholder="验证密码" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<label for="email" class="sr-only">邮箱</label> <input type="email"
+							class="form-control" id="email" placeholder="邮箱"
+							autocomplete="off">
+					</div>
+					<div class="form-group">
+						<label for="email" class="sr-only">地址</label> <input type="email"
+							class="form-control" id="email" placeholder="地址"
+							autocomplete="off">
+					</div>
+					<div class="form-group">
+						<input type="submit" value="注&nbsp;&nbsp;册"
+							class="btn btn-primary">
+					</div>
+				</form>
+				 END Sign In Form  
+
+			</div>
+		</div>
+ -->
+</body>
+</html>

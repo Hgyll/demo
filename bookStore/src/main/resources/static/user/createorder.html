@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>创建销售订单</title>
+</head>
+
+<body>
+
+    <div>
+        <!--<div class="easyui-panel" title="New Topic" style="width:400px">-->
+        <div style="padding: 10px 60px 20px 60px; margin: auto; width: 500px;">
+            <form id="sales" method="post">
+                <table cellpadding="5">
+                    <!-- <tr>orderId int 11 0 0 -1 0 0 0 0 -1 
+                    <td>订单编号:</td>
+                    <td><input class="easyui-textbox" type="text" name="custNo" data-options="required:true"></input></td>
+                </tr> -->
+                    <tr>
+                        <td>产品名称:</td>
+                        <td><input class="easyui-textbox" type="text" name="productName" data-options="required:true"></input></td><!-- validType:'email' -->
+                    </tr>
+                    <tr>
+                        <td>产品单价:</td>
+                        <td><input class="easyui-textbox" type="text" name="productPrice" data-options="required:true"></input></td><!-- validType:'email' -->
+                    </tr>
+
+                    <tr>
+                        <td>产品折扣:</td>
+                        <td><input class="easyui-textbox" type="text" name="productDiscount" data-options="required:true"></input></td><!-- validType:'email' -->
+                    </tr>
+                    <tr>
+                        <td>产品数量:</td>
+                        <td><input class="easyui-textbox" type="text" name="productNum" data-options="required:true"></input></td><!-- validType:'email' -->
+                    </tr>
+                    <tr>
+                        <td>客户编号:</td>
+                        <td><select class="easyui-combobox" name="cusId" data-options="width:120,required:true,url:'http://localhost:8080/customer/getCustomerNo',valueField:'cusId',textField:'cusName', panelHeight:'auto'">
+                                <option value=""></option>
+                            </select></td>
+                    </tr>
+
+                    <tr>
+                        <td><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">确定</a></td>
+                        <td><a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">取消</a></td>
+                       
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <!--</div>-->
+    </div>
+
+
+    <div id="winKOrder" class="easyui-window" title="订单信息" style="width:600px;height:400px" data-options="iconCls:'icon-large-smartart',modal:true,closed:true">
+
+        <table id="listlistKOrder" class="easyui-datagrid" style="width:100%;" data-options="
+                toolbar:'#tbListKOrder',fitColumns:true,singleSelect:true">
+            <thead>
+                <tr>
+                <th data-options="field:'productName',width:100,align:'left'">产品名称</th> 
+                   <th data-options="field:'productPrice',width:100,align:'left'">产品价格</th> 
+                  <th data-options="field:'productDiscount',width:100,align:'left'">产品折扣</th> 
+                   <th data-options="field:'productNum',width:100,align:'left'">商品数量</th> 
+                   <th style="color:red " data-options="field:'orderAmount',width:100,align:'left'">总金额</th>
+                   <th data-options="field:'orderDate',width:200,align:'left'">购买日期</th>
+                </tr>
+            </thead>
+                
+        </table>
+         
+            <a style=" position:absolute;  right: 100px; bottom:20px;" href="javascript:void(0)" class="easyui-linkbutton" onclick="confirmQROrder()">确认购买</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a style=" position:absolute; right: 20px; bottom:20px;" href="javascript:void(0)" class="easyui-linkbutton" onclick="giveUp()">放弃订单</a>
+       
+    </div>
+
+
+ 
+    <script type="text/javascript">
+       function excelForm(){
+            window.location.href = "http://localhost:8080/excel/customer";
+       }
+
+
+
+      function giveUp() {        
+          $('#winKOrder').window('close');
+            // $('#winKOrder').window({// onBeforeClose: function () { }  }) $('#winQROrder').window('closed');
+        }
+
+        function submitForm() { 
+           //   $('#winKOrder')[0].reset();
+            row = $('#sales').serialize(); 
+            $('#winKOrder').window('open');
+           $('#listlistKOrder').datagrid({
+                url: 'http://localhost:8080/sales/addAmount?' + row
+            }); 
+        }
+
+       function clearForm(){
+             row = $('#sales').serialize();   
+            $('#winQROrder').window('open');
+              $('#listlistContant').datagrid({
+               url: 'http://localhost:8080/contact/getIdAllContant?cusId=' + row.cusId
+           });
+       }
+       function confirmQROrder(){
+                $.ajax({
+                type: "post",//提交类型
+                url: "http://localhost:8080/sales/addOrder",//http://localhost:8080/CRM/
+                dataType: 'json',
+                data: $('#sales').serialize(),   //ajax提交的方式
+                success: function (obj) {
+                    $.messager.alert('订单提示', obj.result); 
+                   //  $('#sales').datagrid('reload');
+                     $('#winKOrder').window('close');
+                      $('#sales')[0].reset();
+                    //  $('#sales').datagrid('reload');
+                }
+            })
+       }
+        function addOrder() {
+            if ($('#sales').form('validate')) {  //异步不用刷新页面，
+                $.ajax({
+                    type: "post",//提交类型
+                    url: "http://localhost:8080/sales/addOrder",//http://localhost:8080/CRM/
+                    dataType: 'json',
+                    data: $('#sales').serialize(),   //ajax提交的方式
+                    success: function (obj) {
+                        $.messager.alert('添加提示', obj.result);
+                        // $.messsge(obj);//alert
+                    }
+                })
+            }
+        }
+        // function clearForm() {
+        //     $('#sales')[0].reset();//同时，排序，等待
+
+        // }
+    </script>
+
+
+
+</body>
+
+</html>

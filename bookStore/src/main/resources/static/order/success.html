@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<h1 ></h1>
+
+	<script type="text/javascript">
+	alert("添加成功");
+		onload = function() {
+			setInterval(go, 1000);
+		};
+		var x = 1; //利用了全局变量来执行 
+		function go() {
+			x--;
+			if (x > 0) {
+				document.getElementById("sp").innerHTML = x;
+				//每次设置的x的值都不一样了。  
+			} else {
+				location.href = '../index.html';
+			}
+		}
+	</script>
+
+</body>
+</html>

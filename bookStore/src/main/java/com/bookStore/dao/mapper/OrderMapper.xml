@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace是对应的mapper接口文件 -->
+<mapper namespace="com.bookStore.dao.OrderMapper">
+
+	<insert id="addOrder"
+		parameterType="com.bookStore.dao.model.Order">
+		insert into
+		ordera(cusId,bookId,productName,productPrice,productDiscount,productNum,orderAmount,orderDate,cusAddr)
+		values(#{cusId},
+		#{bookId},#{productName},#{productPrice},#{productDiscount},#{productNum},#{orderAmount},#{orderDate},#{cusAddr})
+	</insert>
+
+	<select id="listOrder"
+		resultType="com.bookStore.dao.model.Order">
+		select * from ordera
+	</select>
+	<select id="listExtendOrder" resultType="map">
+		select orderId,
+		bookId,
+		productName,
+		productDiscount,
+		productPrice,
+		cusName,
+		orderAmount,
+		orderDate,
+		productNum,
+		customer.cusId ,
+		customer.cusAddr
+		from ordera join
+		customer ON customer.cusId=ordera.cusId
+	</select>
+
+	<select id="listExtendOrdercensus" resultType="map">
+		select sum(orderAmount) as sumPrice, cusName from ordera join customer ON
+		customer.cusId=ordera.cusId GROUP BY ordera.cusId
+	</select>
+
+</mapper>

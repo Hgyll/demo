@@ -1,0 +1,108 @@
+<div>
+	<!--<div class="easyui-panel" title="New Topic" style="width:400px">-->
+	<div style="padding:10px 60px 20px 60px" align="center">
+		<form id="frmAddContact" method="post">
+			<table cellpadding="5">
+				<tr>
+					<td>客户性别:</td>
+					<td>
+						<select class="easyui-combobox" name="ctGender" data-options="width:170,required:true">
+							<option value=""></option>
+							<option value="男">男</option>
+							<option value="女">女</option>
+							<!--<option value="西南">西南</option>
+							<option value="华南">华南</option>
+							<option value="华中">华中</option>-->
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>联系人姓名:</td>
+					<td><input class="easyui-textbox" type="text" name="ctName" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>客户编号:</td>
+					<td>
+						<select class="easyui-combobox" name="cusNo" data-options="width:170,required:true,url:'http://localhost:8080/customer/getCustomerNo',valueField:'cusNo',textField:'cusNo'">
+							<option value=""></option>
+							<!--<option value="男">男</option>
+							<option value="女">女</option>-->
+							<!--<option value="西南">西南</option>
+							<option value="华南">华南</option>
+							<option value="华中">华中</option>-->
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>联系人电话:</td>
+					<td><input class="easyui-textbox" type="text" name="ctPhone" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>联系人头衔:</td>
+					<td>
+						<select class="easyui-combobox" name="ctTitle" data-options="width:170,required:true">
+							<option value=""></option>
+							<option value="职员">职员</option>
+							<option value="经理">经理</option>
+							<option value="CEO">CEO</option>
+							<option value="总裁">总裁</option>
+							<option value="董事长">董事长</option>
+						</select>
+					</td>
+				</tr>
+				<!--<tr>
+					<td>信用级别:</td>
+					<td>
+						<select class="easyui-combobox" name="cusCredit" data-options="width:170,required:true">
+							<option value=""></option>
+							<option value="一级">一级</option>
+							<option value="二级">二级</option>
+							<option value="三级">三级</option>
+							<option value="四级">四级</option>
+							<option value="五级">五级</option>
+						</select>
+					</td>
+				</tr>-->
+				<tr>
+					<td>备注:</td>
+					<td><input class="easyui-textbox" type="text" name="ctMemo" data-options="required:true"></input>
+					</td>
+				</tr>
+				
+				
+				<tr>
+					<td>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitContactForm()">新增</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">取消</a>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<!--</div>-->
+</div>
+<script type="text/javascript">
+	function submitContactForm() {
+		if($('#frmAddContact').form('validate')) {//校验输入框是否为有数据
+			//提交
+			$.ajax({
+				type:"post",//表单提交类型
+			url:"http://localhost:8080/contact/addContact",//提交路径地址
+           
+				dataType:'json',//后台返回的数据格式
+				data:$('#frmAddContact').serialize(),//把表单数据序列化成ajax所需要的格式
+				success:function(obj){
+					//提交成功后的处理代码 obj就是后台的返回对象
+					$.messager.alert('新增提示',obj.result);
+				}
+			});
+		}
+	}
+//	function clearForm(){
+//		$('#ff')[0].reset();
+//	}
+</script>

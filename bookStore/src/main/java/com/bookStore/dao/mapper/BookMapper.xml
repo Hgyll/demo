@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace是对应的mapper接口文件 -->
+<mapper namespace="com.bookStore.dao.BookMapper">
+	<!-- private int bookNum; private String bookName; private String bookAuthor; 
+		private String bookPublish; private String bookBigType; private String bookMinType; 
+		private String bookPrice; private String bookImg; -->
+	<insert id="insertBook"
+		parameterType="com.bookStore.dao.model.Book">
+		insert into
+		book(bookName,bookAuthor,bookPublish,bookBigType,bookMinType,bookPrice,bookNum,bookImg)
+		values(#{bookName},
+		#{bookAuthor},#{bookPublish},#{bookBigType},#{bookMinType},#{bookPrice},#{bookNum},#{bookImg})
+	</insert>
+
+	<delete id="deleteBook">
+		delete from book where bookId=#{bookId}
+	</delete>
+
+	<select id="selectAllBook"
+		resultType="com.bookStore.dao.model.Book">
+		select * from book
+	</select>
+
+
+	<select id="getSelectID"
+		resultType="com.bookStore.dao.model.Book">
+		select * from book where bookId=#{getSelectID}
+	</select>
+
+
+	<update id="updateBook"
+		parameterType="com.bookStore.dao.model.Book">
+		update book set
+		bookName=#{bookName},
+		bookAuthor=#{bookAuthor},
+		bookPublish=#{bookPublish},
+		bookPrice=#{bookPrice},
+		bookBigType=#{bookBigType},
+		bookMinType=#{bookMinType},
+		bookNum=#{bookNum},
+		bookImg=#{bookImg}
+		WHERE
+		bookId =#{bookId}
+	</update> 
+	<update id="minusBookNum">
+		UPDATE book SET
+		bookNum=bookNum-#{bookNum}
+		WHERE
+		bookId =#{bookId}
+	</update>
+
+</mapper>

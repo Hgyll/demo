@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace是对应的mapper接口文件 -->
+<mapper namespace="com.bookStore.dao.ShopCartMapper">
+
+	<insert id="AddShopcart"
+		parameterType="com.bookStore.dao.model.ShopCart">
+		insert into shopCart(cusId,bookId,shopDate,bookName) 
+		values(#{cusId},#{bookId},#{shopDate},#{bookName})
+	</insert>
+
+	<select id="listShopCart"
+		resultType="com.bookStore.dao.model.ShopCart">
+		select * from shopCart
+	</select>
+
+	<select id="getlistBycusId"
+		resultType="com.bookStore.dao.model.ShopCart">
+		select * from shopCart where cusId=#{cusId}
+	</select>
+
+	<select id="getlistBycusIdandBookId"
+		resultType="com.bookStore.dao.model.ShopCart">
+		select * from shopCart where cusId=#{cusId} and bookId=#{bookId}
+	</select>
+
+
+ 
+
+</mapper>

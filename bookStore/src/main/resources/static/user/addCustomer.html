@@ -1,0 +1,82 @@
+<div>
+	<!--<div class="easyui-panel" title="New Topic" style="width:400px">-->
+	<div style="padding:10px 60px 20px 60px" align="center">
+		<form id="fromCustomer" method="post">
+			<table cellpadding="5">
+				<tr>
+					<td>客户编号:</td>
+					<td><input class="easyui-textbox" type="text" name="cusNo" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>客户名称:</td>
+					<td><input class="easyui-textbox" type="text" name="cusName" data-options="required:true"></input>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>用户密码:</td>
+					<td><input class="easyui-textbox" type="text" name="cusPassword" data-options="required:true"></input>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>客户地址:</td>
+					<td><input class="easyui-textbox" type="text" name="cusAddr" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>联系方式:</td>
+					<td><input class="easyui-textbox" type="text" name="cusPhone" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>客户类型:</td>
+					<td>
+						<select class="easyui-combobox" name="cusType" data-options="width:170,required:true">
+							<option value=""></option>
+							<option value="管理员">管理员</option>
+							<option value="普通客户">普通客户</option>
+							<option value="大客户">大客户</option>
+							<option value="VIP客户">VIP客户</option>
+							<option value="合作伙伴">合作伙伴</option>
+							<option value="战略合作伙伴">战略合作伙伴</option>
+						</select>
+					</td>
+				</tr>
+				 
+				<tr>
+					<td>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">新增</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">取消</a>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<!--</div>-->
+</div>
+<script type="text/javascript">
+	function submitForm() {
+		if($('#fromCustomer').form('validate')) {//校验输入框是否为有数据
+			//提交
+			$.ajax({
+				type:"post",//表单提交类型
+			url:"customer/addCustomer",//提交路径地址http://localhost:8080/           
+				dataType:'json',//后台返回的数据格式
+				data:$('#fromCustomer').serialize(),//把表单数据序列化成ajax所需要的格式
+				success:function(obj){
+					$('#fromCustomer').form('clear');
+					   $.messager.alert('添加提示', obj.result);
+					//提交成功后的处理代码 obj就是后台的返回对象
+					
+				}
+			});
+		}
+	}
+	function clearForm(){
+		$('#fromCustomer')[0].reset();
+	}
+</script>

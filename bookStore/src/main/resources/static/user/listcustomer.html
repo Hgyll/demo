@@ -1,0 +1,193 @@
+
+
+<div>
+	<table id="tblCustomer" class="easyui-datagrid" style="width:100%;height:450px"
+	    data-options="toolbar:'#tbListCustomer' ,pageList:[5,10,15,20],pageSize:5,pagination:true,url:'customer/listCustomer',fitColumns:true,singleSelect:true">
+	    <thead>
+			<tr>
+				<th data-options="field:'cusNo',width:100,align:'center'">用户编号</th>
+				<th data-options="field:'cusName',width:100">用户名称</th>
+				<th data-options="field:'cusPassword',width:100">用户密码</th>
+				<th data-options="field:'cusAddr',width:100">用户地址</th>
+				<th data-options="field:'cusPhone',width:100">联系方式</th>
+				<th data-options="field:'cusType',width:100">用户类型</th>		  
+			</tr>
+	    </thead>
+	</table>
+	
+	<div id="tbListCustomer">
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="editCustomer()">修改</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="delCustomer()">删除</a>
+		  <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-large-smartart',plain:true" onclick="customerExcelForm()">导出联系人Excel</a>
+	</div>
+	
+	<div id="winCustomer" class="easyui-window" title="修改用户" style="width:600px;height:450px"
+	    data-options="iconCls:'icon-edit',modal:true,closed:true">
+	    <div style="padding:10px 60px 20px 60px;margin: auto;width:500px">
+	    <form id="frmEditCustomer" method="post">
+	    	<table cellpadding="5">
+	    		 <tr>
+	    		
+					<td>客户编号:</td>
+					  <input type="hidden" name="cusId">
+					<td><input class="easyui-textbox" type="text" name="cusNo" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>客户名称:</td>
+					<td><input class="easyui-textbox" type="text" name="cusName" data-options="required:true"></input>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>用户密码:</td>
+					<td><input class="easyui-textbox" type="text" name="cusPassword" data-options="required:true"></input>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>客户地址:</td>
+					<td><input class="easyui-textbox" type="text" name="cusAddr" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>联系方式:</td>
+					<td><input class="easyui-textbox" type="text" name="cusPhone" data-options="required:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>客户类型:</td>
+					<td>
+						<select class="easyui-combobox" name="cusType" data-options="width:170,required:true">
+							<option value=""></option>
+							<option value="管理员">管理员</option>
+							<option value="普通客户">普通客户</option>
+							<option value="大客户">大客户</option>
+							<option value="VIP客户">VIP客户</option>
+							<option value="合作伙伴">合作伙伴</option>
+							<option value="战略合作伙伴">战略合作伙伴</option>
+						</select>
+					</td>
+				</tr>
+	    		 
+	    		<tr>
+	    			<td><a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateCustomer()">修改</a></td>
+	    			<td><a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearCustomer()">取消</a></td>
+	    		</tr>
+	    	</table>
+	    </form>
+	    </div>
+	</div>
+	<div id="winContact" class="easyui-window" title="查看联系人" style="width:600px;height:450px"
+	    data-options="iconCls:'icon-search',modal:true,closed:true">
+	   <table id="tblContact" class="easyui-datagrid" style="width:100%;height:400px"
+		    data-options="toolbar:'#tbListContact' ,url:'http://localhost:8080/contact/getAllContact',fitColumns:true,singleSelect:true">
+		    <thead>
+				<tr>
+					<th data-options="field:'ctName',width:100,align:'center'">联系人姓名</th>
+					<th data-options="field:'ctGender',width:100">性别</th>
+					<th data-options="field:'ctPhone',width:100">联系电话</th>
+					<th data-options="field:'ctTitle',width:100">职位</th>
+					<th data-options="field:'ctMemo',width:100">备注</th>
+				</tr>
+		    </thead>
+		</table>
+	    </div>
+	    <div id="tbListContact">
+		
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="delContact()">删除</a>
+		
+</div>
+
+<script type="text/javascript">
+	 function customerExcelForm(){
+       window.location.href = "CustomerExcel/customer";
+  }
+	function updateCustomer(){
+		if($('#frmEditCustomer').form('validate')){//校验必填输入框
+			$.ajax({
+				type:"post",//表单提交类型post,get
+				url:"customer/updateCustomer",//提交地址，相当于与form的action
+				dataType:'JSON',//后台返回的数据格式
+				data:$('#frmEditCustomer').serialize(),//把表单数据序列化成ajax方法所需要的格式
+				success:function(obj){
+					$('#tblCustomer').datagrid('reload');
+					$.messager.alert('修改提示',obj.result);
+					$('#winCustomer').window('close');
+				}
+			});
+		}
+	}
+	
+	function clearCustomer(){
+		$('#frmEditCustomer')[0].reset();
+	}
+	
+	function editCustomer(){
+		var row = $('#tblCustomer').datagrid('getSelected');
+		if(row == null){
+			$.messager.alert('修改提示','请选择要修改的行');
+		}else{
+			$('#winCustomer').window('open');//打开window窗口
+			$('#frmEditCustomer').form('load',row);//加载选中行的数据到表单标签
+		}
+	}
+	function listContact(){
+		var row = $('#tblCustomer').datagrid('getSelected');
+		if(row == null){
+			$.messager.alert('提示查看','请选择查看的行');
+		}else{
+			$('#winContact').window('open');//打开window窗口
+			$('#tblContact').datagrid({
+				url:'http://localhost:8080/contact/getAllContact?cusNo='+row.cusNo
+			});
+//	$('#frmEditCustomer').form('load',row);//加载选中行的数据到表单标签
+		}
+	}
+	function delCustomer(){
+		var row = $('#tblCustomer').datagrid('getSelected');
+		if(row == null){
+			$.messager.alert('删除提示','请选择要删除的行');
+		}else{
+			$.messager.confirm('删除提示','确认要删除选中的行吗?',function(r){
+			    if (r){
+						$.ajax({
+							type:"post",
+							url:"customer/delCustomer",
+							data:{
+								cusId:row.cusId
+							},
+							dataType:"JSON",
+							success:function(obj){
+								$('#tblCustomer').datagrid('reload');//刷新当前页
+								$.messager.alert('删除提示',obj.result);
+							}
+						});	
+			    }
+			});
+		}
+	}
+		function delContact(){
+		var row = $('#tblContact').datagrid('getSelected');
+		if(row == null){
+			$.messager.alert('删除提示','请选择要删除的行');
+		}else{
+			$.messager.confirm('删除提示','确认要删除选中的行吗?',function(r){
+			    if (r){
+					$.ajax({
+						type:"post",
+						url:"http://localhost:8080/contact/delContact",
+						data:{
+							ctId:row.ctId
+						},
+						dataType:"JSON",
+						success:function(obj){
+							$('#tblContact').datagrid('reload');//刷新当前页
+							$.messager.alert('删除提示',obj.result);
+						}
+					});	
+			    }
+			});
+		}
+	}
+</script>

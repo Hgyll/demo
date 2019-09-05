@@ -1,0 +1,115 @@
+
+<!-- 
+private int bookId;
+	private int bookNum;
+	private String bookName;
+	private String bookAuthor;
+	private String bookPublish;
+	private String bookBigType;
+	private String bookMinType;
+	private String bookPrice;
+	private String bookImg;
+ -->
+
+<div>
+	<!--<div class="easyui-panel" title="New Topic" style="width:400px">-->
+	<div style="padding: 10px 60px 20px 60px" align="center">
+		<form id="bookForm" method="post">
+			<table cellpadding="5">
+				<tr>
+					<td>图书名称:</td>
+					<td><input class="easyui-textbox" type="text" name="bookName"
+						data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<td>图书作者:</td>
+					<td><input class="easyui-textbox" type="text"
+						name="bookAuthor" data-options="required:true"></input></td>
+				</tr>
+
+				<tr>
+					<td>出版社:</td>
+					<td><input class="easyui-textbox" type="text"
+						name="bookPublish" data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<td>图书类型:</td>
+					<td><select class="easyui-combobox" name="bookBigType"
+						data-options="width:170,required:true">
+							<option value=""></option>
+							<option value="成功励志">成功励志</option>
+							<option value="法律">法律</option>
+							<option value="管理">管理</option>
+							<option value="计算机">计算机</option>
+							<option value="教育考试">教育考试</option>
+							<option value="科技工程">科技工程</option>
+							<option value="时尚生活">时尚生活</option>
+							<option value="文化历史">文化历史</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>图书子类型:</td>
+					<td><input class="easyui-textbox" type="text"
+						name="bookMinType" data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<td>图书数量:</td>
+					<td><input class="easyui-textbox" type="text" name="bookNum"
+						data-options="required:true"></input></td>
+				</tr>
+
+				<tr>
+					<td>图书价格:</td>
+					<td><input class="easyui-textbox" type="text" name="bookPrice"
+						data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<!-- <tr>
+					<td>图书图片:</td>
+					<td><input class="easyui-textbox" type="text" name="bookImg" data-options="required:true"></input>
+					</td>
+				</tr>
+				 -->
+					<td>图书图片:</td>
+					<td><input type="button" id="pic" value="添加图片"> <br>
+						<img id="pica"
+						style="height: 100px; width: 80px; margin-top: 2px; background: green;"
+						src="book/img/5fcd6b84-9bd7-45ed-91a7-f59440c3d149.jpeg"> <input
+						id="upload" name="file" accept="image/*" type="file"
+						style="display: none" /></td>
+				</tr>
+				<tr>
+					<td><a href="javascript:void(0)" class="easyui-linkbutton"
+						onclick="submitForm()">新增</a></td>
+					<td><a href="javascript:void(0)" class="easyui-linkbutton"
+						onclick="clearForm()">取消</a></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<!--</div>-->
+</div>
+<script type="text/javascript">
+	function submitForm() {
+		alert( $('#bookForm').serialize());
+		 //Console.log("aaaaaa"+$('#bookForm').serialize());
+		if ($('#bookForm').form('validate')) {//校验输入框是否为有数据
+			//提交
+			$.ajax({
+				type : "post",//表单提交类型
+				url : "book/addBook",//提交路径地址http://localhost:8080/           
+				dataType : 'json',//后台返回的数据格式
+				data : $('#bookForm').serialize(),//把表单数据序列化成ajax所需要的格式
+				success : function(obj) {
+					$('#bookForm').form('clear');
+					$.messager.alert('添加提示', obj.result);
+					//提交成功后的处理代码 obj就是后台的返回对象
+					
+				}
+			});
+		}
+	}
+	function clearForm() {
+		$('#bookForm')[0].reset();
+	}
+</script>

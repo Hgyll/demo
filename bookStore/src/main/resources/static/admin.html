@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>图书后台管理系统</title>
+
+<link rel="stylesheet" type="text/css"
+	href="easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+
+
+<script type="text/javascript" src="js/ajaxfileupload.js"></script>
+
+<script type="text/javascript" src="easyui/jquery.min.js"></script>
+<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+<script type="text/jscript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="js/echarts.js"></script>
+<style type="text/css">
+.logo {
+	/* background-color: #0081C2;
+				background-image: url(img/cqut.png);
+				width: 100%;
+				background-repeat: no-repeat;
+				color: white;
+				text-align: center;
+				;
+				font-size: 40px;
+				background-size: 100px 30px;
+				background-position-x: 10px;
+				background-position-y: 20px; */
+	background-image: url(img/cqut.png);
+	height: 54px;
+	width: 100%;
+	background-repeat: no-repeat;
+	color: black;
+	font-size: 40px;
+	text-align: center;
+	background-size: 250px 46px;
+	background-position-x: 8px;
+	background-position-y: 0px;
+	font-family: "宋体";
+	margin-top: 5px;
+	font-weight: 700;
+}
+</style>
+
+</head>
+
+<body class="easyui-layout">
+
+	<script type="text/javascript">
+		//验证是否为管理员
+		function getCookie(cookieKey) {
+			//alert("-----------");
+			var _cookie = document.cookie.split("; ");
+			var _ckt = "";
+			for (j = 0; j < _cookie.length; j++) {
+				_ckt = _cookie[j].split("=")
+				if (_ckt[0].toLowerCase() == cookieKey.toLowerCase())
+					return _ckt[1];
+			}
+			return "";
+		}
+		var gcookie = getCookie("cookieCustomerId");
+		//alert(gcookie);
+		if(gcookie==""||gcookie==null){
+			window.location.href = "../login.html"
+		}
+		$.ajax({
+			type : "post",//表单提交类型
+			url : "customer/cusgetIdInfo",
+			data:{
+				cusId:gcookie
+			},
+			dataType : 'json',
+            success:function(obj){
+            	//alert();
+            	if(obj.cusType=="管理员"){ 
+            	}else{
+            		alert(" 是"+obj.cusType+" 没有权限访问 ");
+            		window.location.href = "personal/personalIfo.html"
+            	}
+            	
+            }
+		});
+	</script>
+
+
+	<!--头部-->
+	<div data-options="region:'north'" style="height: 65px;">
+		<div class="logo">书店后台管理系统</div>
+	</div>
+	<!--头部结束-->
+	<!--<div data-options="region:'south',title:'South Title',split:true" style="height:100px;"></div>
+	<div data-options="region:'east',title:'East',split:true" style="width:100px;"></div>-->
+	<!--菜单栏开始-->
+	<div data-options="region:'west',title:'菜单'" style="width: 230px;">
+		<div id="sm" class="easyui-sidemenu"
+			data-options="data:data,border:false,width:300"></div>
+		<script type="text/javascript">
+			var data = [ {
+				text : '用户管理', //菜单名
+				iconCls : 'icon-more', //图标
+				state : 'open', //菜单栏开关
+				children : [ {
+					text : '添加用户基本信息',
+					href : 'user/addCustomer.html'
+				}, {
+					text : '用户基本信息查询',
+					href : 'user/listcustomer.html'
+				}]
+			}, {
+				text : '图书管理', //菜单名
+				iconCls : 'icon-more', //图标
+				state : 'close', //菜单栏开关
+				children : [ {
+					text : '添加图书',
+					href : 'book/shangchuan.html'
+				}, {
+					text : '图书信息',
+					href : 'book/listBook.html'
+				} ]
+			}, {
+				text : '订单管理', //菜单名
+				iconCls : 'icon-more', //图标
+				state : 'close', //菜单栏开关
+				children : [
+					// 	{
+					// text : '添加订单',
+					// href : 'order/addOrder.html'
+			     	// },
+					{
+					text : '订单信息',
+					href : 'order/listOrder.html'
+				} ]
+			}, {
+				text : '统计图表', //菜单名
+				iconCls : 'icon-more', //图标
+				state : 'close', //菜单栏开关
+				children : [ {
+					text : '用户订单统计图',
+					href : 'report/orderCensus.html'
+				}]
+			}
+			// , {
+			// 	text : '销售管理',
+			// 	iconCls : 'icon-more',
+			// 	children : [ {
+			// 		text : '创建订单',
+			// 		href : 'customer/createorder.html'
+			// 	}, {
+			// 		text : '历史订单查询',
+			// 		href : 'customer/historycus.html'
+			// 	} ]
+			// }
+			];
+
+			function toggle() {
+				var opts = $('#sm').sidemenu('options');
+				$('#sm').sidemenu(opts.collapsed ? 'expand' : 'collapse');
+				opts = $('#sm').sidemenu('options');
+				$('#sm').sidemenu('resize', {
+					width : opts.collapsed ? 60 : 200
+				})
+			}
+			$('#sm').sidemenu({
+				onSelect : function(item) {
+					var tab = $('#tt').tabs('getTab', item.text);
+					if (tab == null) {//新增标签
+						$('#tt').tabs('add', {
+							title : item.text,
+							closable : true,
+							href : item.href
+						//连接二级页面
+						});
+					} else {
+						$('#tt').tabs('select', item.text);//返回标签
+					}
+				}
+			});
+		</script>
+	</div>
+	<!--菜单栏结束-->
+	<!--功能栏-->
+	<div data-options="region:'center'"
+		style="padding: 5px; background: #eee;">
+		<div id="tt" class="easyui-tabs" style="width: 100%; height: 100%;">
+			<!--<div title="Tab1" style="padding:20px;display:none;">
+				tab1
+			</div>
+			<div title="Tab2" data-options="closable:true" style="overflow:auto;padding:20px;display:none;">
+				tab2
+			</div>
+			<div title="Tab3" data-options="iconCls:'icon-reload',closable:true" style="padding:20px;display:none;">
+				tab3
+			</div>-->
+		</div>
+	</div>
+	<!--功能栏结束-->
+	</div>
+
+
+</body>
+
+</html>

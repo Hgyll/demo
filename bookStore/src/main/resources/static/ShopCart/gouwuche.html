@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>购物车</title>
+<script type="text/javascript" src="js/gouwu.js"></script>
+<link href="css/gouwu.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../easyui/jquery.min.js"></script>
+</head>
+
+<body>
+
+	<script type="text/javascript">
+		$(function() {
+			//alert("获取Cookie");
+			var gcookie = getCookie("cookieCustomerId");
+			//alert(gcookie);
+			if (gcookie == "") {
+				$('#dlName').css("display", "none");
+			} else {
+				var dlName = getCookieName("cookieCustomername");
+				//alert(dlName);
+				$("#dlName").text("" + dlName + ""); //a标签里添加值
+				$('#storedl').css("display", "none");
+				$('#zhuche').css("display", "none");
+			}
+		});
+		function getCookie(cookieKey) {
+			var _cookie = document.cookie.split("; ");
+			var _ckt = "";
+			for (j = 0; j < _cookie.length; j++) {
+				_ckt = _cookie[j].split("=")
+				if (_ckt[0].toLowerCase() == cookieKey.toLowerCase())
+					return _ckt[1];
+			}
+			return "";
+		}
+		function getCookieName(cookieKey) {
+			//alert("获取名字");
+			var _cookie = document.cookie.split("; ");
+			var _ckt = "";
+			for (j = 0; j < _cookie.length; j++) {
+				_ckt = _cookie[j].split("=")
+				if (_ckt[0].toLowerCase() == cookieKey.toLowerCase())
+					return _ckt[1];
+			}
+			return "";
+		}
+		var gcookiea = getCookie("cookieCustomerId");
+		alert(gcookiea);
+		if (gcookiea == "") {
+			$('#dlName').css("display", "none");
+		} else {
+			$
+					.ajax({
+						type : "post",
+						url : "../shopCart/getlistID",
+						data : {
+							'cusId' : gcookiea
+						},
+						async : false,
+						success : function(data) {
+							alert("---------------");
+
+							var str = "";
+							 
+							 
+							for (i in data) {
+								//alert(data[i].bookName);
+							  var	a = 1;
+							  var	b = (i+1)*2;
+							  alert(" a"+a+" b"+b);
+								alert(a);
+								str += "<tr>"
+										+ "<td>"
+										+ "<input type='checkbox' class='checkCss' />"
+										+ "</td>"
+										+ "<td>"
+										+ "<p>"
+										+ "<img src='images/shouji.jpg' />"
+										+ "</p>"
+										+ "<p>"
+										+ "复活 "
+										+ "</p>"
+										+ "</td>"
+										+ "<td>"
+										+ "200"
+										+ "</td>"
+										+ "	<td class='count'>"
+										+ "<input class='reduceCss' id='jia"+a+"' value='-' type='button' />"
+										+ "<input type='text' class='inputCountCss' id='inputCountCss"+a+"' value='1' size='8'/> "
+										+ "<input class='addCss' id='jia"+b+"' value='+' type='button' /></td>"
+										+ "	<td id='stotal3'>"
+										+ "9000"
+										+ "</td>"
+										+ "	<td><a href='#' class='a'>删除</a></td>"
+										+ "</tr>";
+							}
+							alert(str);
+							//document.getElementById("tbodydataBook ").innerHTML = str;
+							 $("#tbodydataBook").append(str);
+						}
+					});
+		}
+	</script>
+
+
+	<div id="page">
+		<div id="listdiv">
+			<h4>购物车</h4>
+			<table width="750" cellpadding="0" cellspacing="0" id="gwcTable">
+				<div id="tbodydataBook"></div>
+				<!-- 
+				<tr>
+					<td><input type="checkbox" class="checkCss" /></td>
+					<td><p>
+							<img src="images/shouji.jpg" />
+						</p>
+						<p>华为手机P8</p></td>
+					<td>2000</td>
+					<td class="count"><input class="reduceCss" id="jia1" value="-"
+						type="button" /> <input type="text" class="inputCountCss"
+						id="inputCountCss1" value="1" size="8" /> <input class="addCss"
+						id="jia2" value="+" type="button" /></td>
+					<td id="stotal3">2000</td>
+					<td><a href="#" class="a">删除</a></td>
+				</tr>
+
+				<tr>
+					<td><input type="checkbox" class="checkCss" /></td>
+					<td><p>
+							<img src="images/cfy.jpg" />
+						</p>
+						<p>玫红色 女款 冲锋衣外套</p></td>
+					<td>600</td>
+					<td class="count"><input class="reduceCss" id="jia3" value="-"
+						type="button" /> <input type="text" class="inputCountCss"
+						id="inputCountCss2" value="1" size="8" /> <input class="addCss"
+						id="jia4" value="+" type="button" /></td>
+					<td id="stotal3">600</td>
+					<td><a href="#" class="a">删除</a></td>
+				</tr>
+				 -->
+				<!-- 	<tr>
+					<td><input type="checkbox" class="checkCss" /></td>
+					<td><p>
+							<img src="images/tbx.jpg" />
+						</p>
+						<p>女款 防滑透气 徒步鞋</p></td>
+					<td>200</td>
+					<td class="count"><input class="reduceCss" id="jia5" value="-"
+						type="button" /> <input type="text" class="inputCountCss"
+						id="inputCountCss3" value="1" size="8" /> <input class="addCss"
+						id="jia6" value="+" type="button" /></td>
+					<td id="stotal3">200</td>
+					<td><a href="#" class="a">删除</a></td>
+				</tr> -->
+			</table>
+		</div>
+		<div id="jiesuan">
+			<div class="t jisuanbtn">
+				<input type="submit" name="btnOrder" id="btnOrder" value="立即结算" />
+			</div>
+			<div class="t TotalMoney">
+				合计：￥<span id="priceTotal">0.00</span>
+			</div>
+			<div class="t">
+				已选商品 <span id="countTotal">0</span> 件
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>购买成功</title>
+		<style>
+			div{
+				width:300px;
+				height:200px;
+				display:flex;
+				margin:0 auto;
+				align-items: center;
+				justify-content: space-around;
+				border:3px dashed #FF33CC;
+				border-radius:8px;
+			}
+			div p{
+				text-align: center;
+				color:blue;
+				font-size:25px;
+				
+			}
+		</style>
+
+	</head>
+	<body>
+		<div>
+			<p>---购买成功，正在返回首页---</p>
+		</div>
+		<script>
+window.onload= function (){
+			var timer = "";
+				clearInterval();
+				timer = setInterval(function (){
+					window.location.href="购物车.html";
+				},5000);
+}
+		<script>
+	</body>
+</html>

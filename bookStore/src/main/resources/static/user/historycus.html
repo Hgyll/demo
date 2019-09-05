@@ -1,0 +1,83 @@
+<meta charset="UTF-8">
+
+<form id="scr" method="post" onload="onload()">
+	<table>
+		<tr>
+			<td>
+				查找方式：
+				<select class="easyui-combobox"  name="find" style="width:100px;">
+					<!-- <option name=" " value=" ">按---查找</option> -->
+					<option name="cusId" value="cusId">客户编号</option>
+					<option name="orderId" value="orderId">订单编号</option>
+					<option name="productNum" value="productNum">数量</option>
+				</select>
+			</td>
+			<td>
+			
+				<input class="easyui-textbox" type="text" id="searcha" name="searcha" data-options="required:true"></input>
+			</td>
+			<td>
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="submit()" style="width:80px">查找</a>
+				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-large-smartart',plain:true" onclick="excelFormls()">导出历史订单Excel</a>
+			</td>
+
+		</tr>
+	</table>
+</form>
+
+<table id="tblorder" class="easyui-datagrid" style="width:100%;height:450px" data-options="toolbar:'#tbList' ,pagination:true,url:'http://localhost:8080/History/getAllHistory',fitColumns:true,singleSelect:true" >
+	<thead>
+		<tr>
+			<th data-options="field:'orderId',width:100,align:'center'">订单编号</th>
+			<th data-options="field:'cusId',width:100">客户编号</th>
+			<th data-options="field:'productName',width:100">产品名称</th>
+			<th data-options="field:'productDiscount',width:100">产品折扣</th>
+			<th data-options="field:'productNum',width:100">数量</th>
+			<th data-options="field:'orderAmount',width:100">金额</th>
+			<th data-options="field:'orderDate',width:100,align:'right'">购买日期</th>
+		</tr>
+	</thead>
+</table>
+
+<script type="text/javascript">
+	 function excelFormls(){
+       window.location.href = "http://localhost:8080/orderExcel/order";
+  }
+	function onload() {
+		$.ajax({
+			type: "post", //表单提交类型post,get
+			url: "http://localhost:8080/History/getAllHistory", //提交地址，相当于与form的action
+			dataType: 'JSON', //后台返回的数据格式
+			data: $('#scr').serialize(), //把表单数据序列化成ajax方法所需要的格式
+			success: function(obj) {
+				alert("提交成功");
+				$('#tblorder').datagrid('reload');
+			}
+		});
+
+	}
+
+	function submit() {
+		var row=$("#searcha").val();
+		var rowa = $("#cusId").val();
+	
+		if($('#scr').form('validate')) { //校验必填输入框
+			$.ajax({
+				type: "get", //表单提交类型post,get
+				url: "http://localhost:8080/History/searchHistory?cusId="+row, //提交地址，相当于与form的action
+				dataType: 'JSON', //后台返回的数据格式
+				data: $('#scr').serialize(), 
+				dataType:"JSON",							
+				success: function(obj) {
+				
+					   $('#tblorder').datagrid({
+						url: 'http://localhost:8080/History/searchHistory?cusId=' + row,
+					});					 
+				$('#tbl').datagrid('clear');
+			}//把表单数据序列化成ajax方法所需要的格式
+
+			});
+			
+		}
+	}
+</script>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+	<table cellpadding="5">
+		<div id="waitbook_loading" style="padding: 50px 0 0 0; display: none;">
+			<div style="width: 103px; margin: 0 auto;">
+				<img src="../images/logo4.png" />
+			</div>
+			<br></br>
+			<div style="width: 103px; margin: 0 auto;">
+				<span>请稍等...</span>
+			</div>
+			<br></br>
+		</div>
+		<input type="file" id="fileImg" name="fileImg">
+		<br />
+		<br />
+		<input type="hidden" id="flagImg" name="flagImg" value="ajax文件上传" />
+		<br />
+		<br />
+		<input type="button" id="btnUploadImg" value="上传文件" />
+	</table>
+	<script type="text/javascript" src="js/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			//上传图片
+			$("#btnUploadImg").click(function() {
+				//	alert("zzzzz");
+				ajaxFileUpload();
+			});
+		});
+		function ajaxFileUpload() {
+			// 开始上传文件时显示一个图片
+			$("#waitbook_loading").ajaxStart(function() {
+				$(this).show();
+				// 文件上传完成将图片隐藏起来
+			}).ajaxComplete(function() {
+				$(this).hide();
+			});
+			//alert("dddddd");
+			var elementIds = [ "flagImg" ]; //flagImg为id、name属性名
+			$.ajaxFileUpload({
+				url : 'book/uploadImg',
+				type : 'post',
+				secureuri : false, //一般设置为false
+				fileElementId : 'fileImg', // 上传文件的id、name属性名
+				dataType : 'json', //返回值类型，一般设置为json、application/json
+				elementIds : elementIds, //传递参数到服务器
+				success : function(data, status) {
+					//alert(data.result);
+					//	$.messager.alert('修改提示', data.result);
+					$.messager.alert('修改提示', data.upImg);
+					$('#imgsrc').attr('src', 'book/img/' + data.upImg)
+
+				},
+				error : function(data, status, e) {
+					alert("上传失败 ");
+				}
+			});
+			//return false;
+		}
+	</script>
+	<img style="height: 50px; width: 40px; background: green;"
+		id="imgsrc" alt=""
+		src="book/img/5fcd6b84-9bd7-45ed-91a7-f59440c3d149.jpeg">
+
+
+	<!-- book/img/4ad35022-ec6c-403e-9788-19cc2dc9c89b.jpg 
+ file:///D:/temp-rainy/a0037175-c582-4cfc-885c-5a6e2a98eab3.jpg
+ book/img/cdca3fe1-a301-4c6d-94df-13a511d41cd0.jpg
+ -->
+
+<br>
+
+</body>
+</html>
